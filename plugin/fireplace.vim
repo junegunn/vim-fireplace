@@ -720,7 +720,11 @@ function! fireplace#findresource(resource, ...) abort
   else
     let suffixes = [''] + split(get(a:000, 2, ''), ',')
   endif
-  for dir in a:0 ? a:1 : fireplace#path()
+  let paths = a:0 ? a:1 : fireplace#path()
+  if empty(paths)
+    let paths = fireplace#client().path()
+  endif
+  for dir in paths
     for suffix in suffixes
       if fnamemodify(dir, ':e') ==# 'jar' && index(fireplace#jar_contents(dir), resource . suffix) >= 0
         return 'zipfile:' . dir . '::' . resource . suffix
