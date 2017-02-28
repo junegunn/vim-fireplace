@@ -1376,11 +1376,13 @@ endfunction
 
 function! s:Edit(cmd, keyword) abort
   try
+    let location = ''
     if a:keyword =~# '^\k\+[/.]$'
       let location = fireplace#findfile(a:keyword[0: -2])
     elseif a:keyword =~# '^\k\+\.[^/.]\+$'
       let location = fireplace#findfile(a:keyword)
-    else
+    endif
+    if empty(location)
       let location = fireplace#source(a:keyword)
     endif
   catch /^Clojure:/
